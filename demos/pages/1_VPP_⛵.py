@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,7 +17,14 @@ st.set_page_config(page_title="VPP", page_icon="⛵")
 
 
 def process_yacht_specifications(
-    tws_range, twa_range, yacht, keel, rudder, main, jib, kite
+    tws_range: List[int],
+    twa_range: List[int],
+    yacht: Dict,
+    keel: Dict,
+    rudder: Dict,
+    main: Dict,
+    jib: Dict,
+    kite: Dict,
 ):
     data = {
         "name": yacht["Name"],
@@ -31,12 +38,12 @@ def process_yacht_specifications(
         "twa_range": twa_range,
     }
 
+    logging.info("Starting VPP simulation")
     json_string = json.dumps(data)
     headers = {"content-type": "application/json", "Accept-Charset": "UTF-8"}
-
-    logging.info("Starting VPP simulation")
     client = app.test_client()
     response = client.post("/api/vpp/", data=json_string, headers=headers)
+
     logging.info("VPP simulation completed")
     return response
 
